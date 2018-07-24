@@ -1,4 +1,4 @@
-FROM crazyht24/alpine-s6:latest
+FROM crazyht/alpine-s6:latest
 
 ENV CONSUL_VERSION=1.2.1 \
     CONSUL_DOMAIN=consul \
