@@ -1,0 +1,12 @@
+{
+    "service": {
+        "name": "redis-sentinel",
+        "port": 26379,
+        "check": {
+            "id": "redis-sentinel",
+            "name": "redis-sentinel",
+            "script": "sentinel-check",
+            "interval": "5s"
+        }
+    }
+}

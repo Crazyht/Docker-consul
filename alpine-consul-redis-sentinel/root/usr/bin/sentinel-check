@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+
+RESULT=`redis-cli -P 26379 ping`
+
+if [ "$RESULT" = "PONG" ]; then
+    exit 0
+fi
+
+exit 2
