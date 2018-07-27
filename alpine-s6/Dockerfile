@@ -6,7 +6,7 @@ ENV S6_OVERLAY_VERSION=v1.21.4.0 \
 
 RUN apk update && \
     apk upgrade && \
-    apk add --update --no-cache bind-tools curl libcap && \
+    apk add --update --no-cache bind-tools curl libcap bash && \
     curl -sSL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-amd64.tar.gz \
     | tar xfz - -C / && \
     curl -sSL https://github.com/janeczku/go-dnsmasq/releases/download/${GO_DNSMASQ_VERSION}/go-dnsmasq-min_linux-amd64 -o /bin/go-dnsmasq && \
