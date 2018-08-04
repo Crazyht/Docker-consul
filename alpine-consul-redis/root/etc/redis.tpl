@@ -47,7 +47,7 @@ pidfile /var/run/redis.pid
 
 # Accept connections on the specified port, default is 6379.
 # If port 0 is specified Redis will not listen on a TCP socket.
-port 6379
+port {{.Env.REDIS_PORT}}
 
 # TCP listen() backlog.
 #
@@ -474,7 +474,7 @@ slave-priority 100
 # The default is:
 #
 # maxmemory-policy noeviction
-
+maxmemory-policy volatile-ttl
 # LRU and minimal TTL algorithms are not precise algorithms but approximated
 # algorithms (in order to save memory), so you can tune it for speed or
 # accuracy. For default Redis will check five keys and pick the one that was
@@ -536,8 +536,8 @@ appendfilename "appendonly.aof"
 # If unsure, use "everysec".
 
 # appendfsync always
-appendfsync everysec
-# appendfsync no
+# appendfsync everysec
+appendfsync no
 
 # When the AOF fsync policy is set to always or everysec, and a background
 # saving process (a background save or AOF log background rewriting) is

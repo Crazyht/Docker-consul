@@ -48,13 +48,19 @@ RUN set -ex; \
 	redis-server --version && \
     mkdir -p /data/redis && \
     chown -R redis:redis /data/redis && \
-    echo -e "include /etc/redis-local.conf\n" >> /etc/redis.conf
+    echo -e "include /etc/redis-local.conf\n" >> /etc/redis.conf && \
+    apk add --update --no-cache gawk
 
 # Add the files.
 ADD root /
 
 # A volume for the redis files.
 VOLUME ["/data/redis"]
+
+ENV REDIS_PORT 6379
+ENV SENTINEL_PORT 26379
+ENV CONSUL_REDIS_SVCNAME Redis
+ENV CONSUL_SENTINEL_SVCNAME Redis-Sentinel
 
 # Expose the ports for redis.
 EXPOSE 6379

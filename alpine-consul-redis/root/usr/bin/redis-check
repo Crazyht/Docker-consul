@@ -1,9 +1,19 @@
 #!/usr/bin/with-contenv sh
 
-RESULT=`redis-cli ping`
+RESULT=`redis-cli -p $REDIS_PORT ping`
 
 if [ "$RESULT" = "PONG" ]; then
-    exit 0
+  echo "Redis reply to PING"
+
+  role=$(redis-cli info | grep role);
+  if [ -z "${role##*master*}" ]; then
+    echo "Redis instance is master ($role)"
+    curl -s --request PUT --data "@/etc/consul/service-updates/redis.master.json"  http://127.0.0.1:8500/v1/agent/service/register > /dev/null
+  else
+    echo "Redis instance is slave ($role)"
+    curl -s --request PUT --data "@/etc/consul/service-updates/redis.slave.json"  http://127.0.0.1:8500/v1/agent/service/register > /dev/null
+  fi
+  exit 0
 fi
 
 exit 2

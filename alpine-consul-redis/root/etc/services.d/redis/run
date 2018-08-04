@@ -1,3 +1,171 @@
 #!/usr/bin/with-contenv sh
 
-s6-setuidgid redis redis-server /etc/redis.conf
+set -eux
+
+readonly service_domain="_$CONSUL_REDIS_SVCNAME._tcp.service.$CONSUL_DC.$CONSUL_DOMAIN"
+readonly service_master="_$CONSUL_REDIS_SVCNAME._master.service.$CONSUL_DC.$CONSUL_DOMAIN"
+readonly sentinel_domain="_$CONSUL_SENTINEL_SVCNAME._tcp.service.$CONSUL_DC.$CONSUL_DOMAIN"
+
+wait_consul_leader () {
+  set +e
+  local leader="$(curl -s http://127.0.0.1:8500/v1/status/leader)"
+  echo "==${leader}=="
+  while [ ! -n "$leader" ] || [ "$leader" == "No known Consul servers" ] || [ "$leader" == "\"\"" ]
+  do
+    sleep 1s
+    leader="$(curl -s http://127.0.0.1:8500/v1/status/leader)"
+    echo "==${leader}=="
+  done
+  echo "Consul leader : $leader"
+  set -e  
+}
+redis_info () {
+  set +e
+  timeout -t 10 redis-cli -h "$1" -p $REDIS_PORT info replication
+  set -e
+}
+reset_sentinel () {
+  set +e
+  timeout -t 10 redis-cli -h "$1" -p $SENTINEL_PORT sentinel reset mymaster
+  set -e
+}
+
+redis_info_role () {
+  echo "$1" | grep -e '^role:' | cut -d':' -f2 | tr -d '[:space:]'
+}
+
+domain_ip () {
+  dig "$1" A +short | head -1 | awk '{print $NF}'
+}
+
+server_domains () {
+  dig "$1" SRV +short | awk '{print $NF}' | sed 's/\.$//g'
+}
+
+# At the end of the (succeeded) script, resetting all sentinels is necessary.
+# This updates the list of supervised slaves.
+# If this task is omitted, the number of "supervised" slaves continues to
+# increase because sentinels are unable to recognize the recovered slave
+# is the same slave as the dead one.
+# Kubernetes may change Pod's IP address on restart.
+reset_all_sentinels () {
+  local sentinel_servers
+  sentinel_servers="$(server_domains "$sentinel_domain")"
+  readonly sentinel_servers
+  local s
+  >&2 echo "Resetting all sentinels: $sentinel_servers"
+  for s in $sentinel_servers; do
+    local s_ip
+    s_ip="$(domain_ip "$s")"
+
+    if [ -z "$s_ip" ]; then
+      >&2 echo "Failed to resolve: $s"
+      continue
+    fi
+
+    # Ignoring failed sentinels are allowed, since most of the sentinels are
+    # expected to be alive.
+    reset_sentinel "$s_ip"
+  done
+}
+
+# It's okay to fail during failover or other unpredictable states.
+# This prevents from making things much worse.
+run () {
+  wait_consul_leader
+  #cp /opt/redis.template.conf /opt/redis.conf
+
+  # Domain name of the Service is also used as the password.
+  # In this case, password is just an ID to distinguish this replica set from
+  # other ones in the same Kubernetes cluster.
+#   { 
+#     echo "masterauth $service_domain";
+#     echo "requirepass $service_domain"; 
+#   } >> /opt/redis.conf
+
+
+  # Headless Service allows newly added Redis server to scan all working servers.
+  # This enables it to find if it is the first one.
+  local redis_servers
+  redis_servers="$(server_domains "$service_domain")"
+  echo $redis_servers
+  readonly redis_servers
+  local my_host
+  my_host="$(hostname -f).node.$CONSUL_DC.$CONSUL_DOMAIN"
+  readonly my_host
+
+  local master_ip=''
+
+  local only_server=true
+  local s
+  for s in $redis_servers; do
+    echo "Check redis : $s"
+    # My hostname must be excluded to handle restarts.
+    if [ "$s" = "$my_host" ]; then
+      continue
+    fi
+
+    only_server=false
+
+    local s_ip
+    s_ip="$(domain_ip "$s")"
+
+    if [ -z "$s_ip" ]; then
+      >&2 echo "Failed to resolve: $s"
+      continue
+    fi
+
+    local i
+    i="$(redis_info "$s_ip")"
+    if [ -n "$i" ]; then
+      if [ "$(redis_info_role "$i")" = 'master' ]; then
+        master_ip="$s_ip"
+      fi
+    else
+      >&2 echo "Unable to get Replication INFO: $s ($s_ip)"
+      continue
+    fi
+  done
+
+  if [ "$only_server" = true ]; then
+    local retry_max=$((((RANDOM%20)*3)+10))
+    local retry_count=1
+    local masterip="$(domain_ip "$service_master")"
+    while [ ! -n "$masterip" ] && [ $retry_count -lt $retry_max ]
+    do
+        retry_count=$((retry_count+1))
+        sleep 1s
+        masterip="$(domain_ip "$service_master")"
+    done
+    if [ -n "$masterip" ]
+    then
+      only_server=false
+      master_ip=$masterip
+    fi
+  fi
+  if [ "$only_server" = true ]; then
+    # This is an exceptional case: if this is the first server to start in the
+    # replica, this must be run as Master.
+    # Otherwise the StatefulSet will be unable to start.
+
+    # update tags for this service
+    curl -s --request PUT --data "@/etc/consul/service-updates/redis.master.json"  http://127.0.0.1:8500/v1/agent/service/register > /dev/null
+    :
+  else
+    if [ -z "$master_ip" ]; then
+      >&2 echo "Unable to start because all servers are slave."
+      exit 1
+    fi
+    # update tags for this service
+    curl -s --request PUT --data "@/etc/consul/service-updates/redis.slave.json"  http://127.0.0.1:8500/v1/agent/service/register > /dev/null
+    # Now the Master server has been found, this server will be launched as
+    # the slave of the Master.
+    echo "slaveof $master_ip 6379" >> /etc/redis.conf
+  fi
+
+  reset_all_sentinels
+  s6-setuidgid redis redis-server /etc/redis.conf
+  #exec docker-entrypoint.sh redis-server "$@"
+}
+
+run "$@"
