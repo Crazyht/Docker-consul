@@ -46,14 +46,20 @@ RUN set -ex; \
 	apk add --virtual .redis-rundeps $runDeps; \
 	apk del .build-deps; \
 	redis-server --version && \
-    mkdir -p /data/redis && \
-    chown -R redis:redis /data/redis 
-	
+    apk add --update --no-cache gawk
+
 # Add the files.
 ADD root /
 
-# A volume for the redis files.
-VOLUME ["/data/redis"]
+RUN chown redis:redis /etc/sentinel.conf && chmod 666 /etc/sentinel.conf
 
+ENV REDIS_PORT 6379
+ENV SENTINEL_PORT 26379
+ENV CONSUL_REDIS_SVCNAME Redis
+ENV CONSUL_SENTINEL_SVCNAME Redis-Sentinel
+ENV SENTINEL_FAILOVER_TIMEOUT 180000
+ENV SENTINEL_DOWN_AFTER 30000
+ENV SENTINEL_QUORUM 2
+ENV SENTINEL_PARALLEL_SYNC 1
 # Expose the ports for redis.
-EXPOSE 6379
+EXPOSE 26379
