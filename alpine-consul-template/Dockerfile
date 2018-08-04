@@ -5,11 +5,12 @@ ENV CONSUL_TEMPLATE_VERSION=0.19.5 \
     CONSUL_CONFIG_DIR=/etc/consul/conf.d
 
 # Download and install Consul Template
-RUN curl -sLo /tmp/consul-template.zip https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip && \
+RUN apk upgrade --update --no-cache && \
+    curl -sLo /tmp/consul-template.zip https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip && \
     unzip -d /usr/sbin/ /tmp/consul-template.zip && \
     rm /tmp/consul-template.zip && \
-    addgroup consul-template && \
     # create user and give binary permissions to bind to lower port
+    addgroup consul-template && \
     adduser -D -g "" -s /bin/sh -G consul-template consul-template && \
     addgroup s6 && \
     addgroup consul s6 && \
