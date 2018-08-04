@@ -10,12 +10,13 @@ ENV CONSUL_VERSION=1.2.1 \
     CONSUL_RETRY_INTERVAL=5s
 
 # Download and install Consul
-RUN apk add --update --no-cache util-linux && \
+RUN apk upgrade --update --no-cache && \
+    apk add --update --no-cache util-linux && \
     curl -sSLo /tmp/consul.zip https://releases.hashicorp.com/consul/{$CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip && \
     unzip -d /bin /tmp/consul.zip && \
     rm /tmp/consul.zip && \
-    addgroup consul && \
     # create user and give binary permissions to bind to lower port
+    addgroup consul && \
     adduser -D -g "" -s /bin/sh -G consul consul && \
     mkdir -p /data/consul && \
     chown -R consul:consul /data/consul

@@ -8,3 +8,7 @@
 if [ "$CONSUL_BOOTSTRAP_DEBUG" = "true" ]; then
     echo "$@" >> $CONSUL_BOOTSTRAP_LOG_FILE
 fi
+
+if [ "$CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT" = "true" ]; then
+    echo "$@"
+fi

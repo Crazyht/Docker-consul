@@ -10,7 +10,7 @@
 NODE_ID=$(uuidgen)
 
 # Output debug messages if required.
-consul-debug "[consul-node-id] node-id: $NODE_ID..."
+#consul-debug "[consul-node-id] node-id: $NODE_ID..."
 
 echo $NODE_ID
 exit 0

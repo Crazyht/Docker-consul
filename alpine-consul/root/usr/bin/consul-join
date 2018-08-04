@@ -20,7 +20,7 @@ if test -z "$JOIN"; then
 fi
 
 # Output debug messages if required.
-consul-debug "[consul-join] $JOIN"
+#consul-debug "[consul-join] $JOIN"
 
 # We found at least one. Exit 0!
 echo "$JOIN"
