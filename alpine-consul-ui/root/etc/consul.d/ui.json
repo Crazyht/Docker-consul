@@ -1,0 +1,5 @@
+{
+    "data_dir": "/data/consul",
+    "disable_update_check": true,
+    "server": false
+}
