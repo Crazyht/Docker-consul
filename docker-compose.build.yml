@@ -1,0 +1,99 @@
+version: '3.4'
+
+services:
+  alpine-s6: 
+    image: crazyht/alpine-s6:v${BUILD_VERSION:-Dev}
+    build:
+      context: ./alpine-s6/
+      args:
+        tag: "v${BUILD_VERSION:-Dev}"
+        alpineversion: "${ALPINE_VERSION:-3.8}"
+      labels:
+        org.label-schema.description: "Alpine with s6 overlay"
+        org.label-schema.vendor: "CrazyHT"
+        org.label-schema.name: "alpine-s6"
+        org.label-schema.build-date: "${BUILD_DATE}"
+        org.label-schema.schema-version: "1.0"
+        org.label-schema.version: "v${BUILD_VERSION:-Dev}"
+        org.label-schema.vcs-url: "http://github.com/crazyht/"
+        org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
+
+  consul: 
+    image: crazyht/alpine-consul:v${BUILD_VERSION:-Dev}
+    build:
+      context: ./alpine-consul/
+      args:
+        tag: "v${BUILD_VERSION:-Dev}"
+      labels:
+        org.label-schema.description: "Alpine with s6 and Consul Server"
+        org.label-schema.vendor: "CrazyHT"
+        org.label-schema.name: "alpine-consul"
+        org.label-schema.build-date: "${BUILD_DATE}"
+        org.label-schema.schema-version: "1.0"
+        org.label-schema.version: "v${BUILD_VERSION:-Dev}"
+        org.label-schema.vcs-url: "http://github.com/crazyht/"
+        org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
+
+  consul-ui: 
+    image: crazyht/alpine-consul-ui:v${BUILD_VERSION:-Dev}
+    build:
+      context: ./alpine-consul-ui/
+      args:
+        tag: "v${BUILD_VERSION:-Dev}"
+      labels:
+        org.label-schema.description: "Alpine with s6 and Consul Server"
+        org.label-schema.vendor: "CrazyHT"
+        org.label-schema.name: "alpine-consul-ui"
+        org.label-schema.build-date: "${BUILD_DATE}"
+        org.label-schema.schema-version: "1.0"
+        org.label-schema.version: "v${BUILD_VERSION:-Dev}"
+        org.label-schema.vcs-url: "http://github.com/crazyht/"
+        org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
+
+  consul-template: 
+    image: crazyht/alpine-consul-template:v${BUILD_VERSION:-Dev}
+    build:
+      context: ./alpine-consul-template/
+      args:
+        tag: "v${BUILD_VERSION:-Dev}"
+      labels:
+        org.label-schema.description: "Alpine with s6 and Consul Template"
+        org.label-schema.vendor: "CrazyHT"
+        org.label-schema.name: "alpine-consul-template"
+        org.label-schema.build-date: "${BUILD_DATE}"
+        org.label-schema.schema-version: "1.0"
+        org.label-schema.version: "v${BUILD_VERSION:-Dev}"
+        org.label-schema.vcs-url: "http://github.com/crazyht/"
+        org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
+        
+  consul-redis: 
+    image: crazyht/alpine-consul-redis:v${BUILD_VERSION:-Dev}
+    build:
+      context: ./alpine-consul-redis/
+      args:
+        tag: "v${BUILD_VERSION:-Dev}"
+      labels:
+        org.label-schema.description: "Alpine with s6, Consul Agent and Redis"
+        org.label-schema.vendor: "CrazyHT"
+        org.label-schema.name: "alpine-consul-redis"
+        org.label-schema.build-date: "${BUILD_DATE}"
+        org.label-schema.schema-version: "1.0"
+        org.label-schema.version: "v${BUILD_VERSION:-Dev}"
+        org.label-schema.vcs-url: "http://github.com/crazyht/"
+        org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
+
+  consul-redis-sentinel: 
+    image: crazyht/alpine-consul-redis-sentinel:v${BUILD_VERSION:-Dev}
+    build:
+      context: ./alpine-consul-redis-sentinel/
+      args:
+        tag: "v${BUILD_VERSION:-Dev}"
+      labels:
+        org.label-schema.description: "Alpine with s6, Consul Agent and Redis sentinel"
+        org.label-schema.vendor: "CrazyHT"
+        org.label-schema.name: "alpine-consul-redis-sentinel"
+        org.label-schema.build-date: "${BUILD_DATE}"
+        org.label-schema.schema-version: "1.0"
+        org.label-schema.version: "v${BUILD_VERSION:-Dev}"
+        org.label-schema.vcs-url: "http://github.com/crazyht/"
+        org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"

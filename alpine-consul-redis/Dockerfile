@@ -1,4 +1,6 @@
-FROM crazyht/alpine-consul-template:latest
+ARG tag="Dev"
+
+FROM crazyht/alpine-consul-template:$tag
 
 # grab su-exec for easy step-down from root
 RUN addgroup -S redis && adduser -S -G redis redis && apk add --no-cache 'su-exec>=0.2'

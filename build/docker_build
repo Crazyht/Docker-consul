@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo "TRAVIS_BRANCH = $TRAVIS_BRANCH"
+echo "TRAVIS_BUILD_NUMBER = $TRAVIS_BUILD_NUMBER"
+echo "ALPINE_VERSION = $ALPINE_VERSION"
+
+if [ "$TRAVIS_BRANCH" == "master" ]
+then
+    VERSION="1.$TRAVIS_BUILD_NUMBER-alpine$ALPINE_VERSION"
+else
+    VERSION="1.$TRAVIS_BUILD_NUMBER-alpine$ALPINE_VERSION-$TRAVIS_BRANCH"
+fi
+
+echo "VERSION = $VERSION"
+
+export BUILD_VERSION=$VERSION
+export BUILD_DATE=`date -u`
+
+echo "BUILD_VERSION = $BUILD_VERSION"
+echo "BUILD_DATE = $BUILD_DATE"
+
+docker-compose -f docker-compose.build.yml build

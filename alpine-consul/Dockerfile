@@ -1,4 +1,6 @@
-FROM crazyht/alpine-s6:latest
+ARG tag="Dev"
+
+FROM crazyht/alpine-s6:$tag
 
 ENV CONSUL_VERSION=1.2.1 \
     CONSUL_DOMAIN=consul \

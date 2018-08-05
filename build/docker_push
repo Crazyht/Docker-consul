@@ -1,0 +1,62 @@
+#!/bin/bash
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+
+push_full_description () {
+    local image="$1" 
+    local token="$2"
+    local file="./$image/README.md"
+    if [ -e "$file" ]
+    then
+        local json='{"full_description":"'
+        while IFS= read -r line
+        do
+            escaped_line=$(/bin/echo $line | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g')
+            json="$json$escaped_line\\n"
+        done < "$file"
+        json="$json\"}"
+        curl -s -H "Authorization: JWT ${token}" -H "Content-Type: application/json" -X PATCH -d "$json" https://hub.docker.com/v2/repositories/crazyht/$image/
+    fi
+}
+
+push_image () {
+    local image="$1" 
+    local token="$2"
+    local branch="$3" 
+    local alpine="$4"
+    docker push crazyht/${image}:v${VERSION:-Dev}
+    if [ "$branch" == "master" ] && [ "$alpine" == "3.8" ]
+    then
+        docker tag crazyht/${image}:v${VERSION:-Dev} crazyht/${image}:latest
+        docker push crazyht/${image}:latest
+
+        push_full_description "${image}" "${token}"
+    else
+        echo "not latest tagging ($branch : $alpine)"
+    fi
+}
+
+
+echo "TRAVIS_BRANCH = $TRAVIS_BRANCH"
+echo "TRAVIS_BUILD_NUMBER = $TRAVIS_BUILD_NUMBER"
+echo "ALPINE_VERSION = $ALPINE_VERSION"
+
+if [ "$TRAVIS_BRANCH" == "master" ]
+then
+    VERSION="1.$TRAVIS_BUILD_NUMBER-alpine$ALPINE_VERSION"
+else
+    VERSION="1.$TRAVIS_BUILD_NUMBER-alpine$ALPINE_VERSION-$TRAVIS_BRANCH"
+fi
+
+echo "VERSION = $VERSION"
+
+# aquire token
+TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+
+push_image 'alpine-s6' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
+push_image 'alpine-consul' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
+push_image 'alpine-consul-ui' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
+push_image 'alpine-consul-template' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
+push_image 'alpine-consul-redis' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
+push_image 'alpine-consul-redis-sentinel' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"

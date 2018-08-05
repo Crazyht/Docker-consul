@@ -1,4 +1,6 @@
-FROM alpine:3.8
+ARG alpineversion="3.8" 
+ARG tag="Dev"
+FROM alpine:$alpineversion
 
 # Add s6-overlay
 ENV S6_OVERLAY_VERSION=v1.21.4.0 \

@@ -1,0 +1,37 @@
+sudo: required
+
+env:
+  global:
+    - DOCKER_COMPOSE_VERSION=1.22.0
+  matrix:
+    - ALPINE_VERSION=3.7
+    - ALPINE_VERSION=3.8
+
+services:
+  - docker
+
+addons:
+  apt:
+    packages:
+      - docker-ce
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y install docker-ce
+  - docker --version
+  - docker-compose --version
+
+script:
+  - ./build/docker_build
+
+deploy:
+  provider: script
+  script: ./build/docker_push
+  on:
+    branch: master
