@@ -1,0 +1,5 @@
+#!/bin/sh
+for file in $(find /usr/bin/ -not -perm -a+x -type f)
+do
+    chmod +x "$file"
+done
