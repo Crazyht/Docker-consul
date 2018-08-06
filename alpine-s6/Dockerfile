@@ -1,5 +1,5 @@
 ARG alpineversion="3.8" 
-ARG tag="Dev"
+ARG tag="dev"
 FROM alpine:$alpineversion
 
 # Add s6-overlay

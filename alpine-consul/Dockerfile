@@ -1,4 +1,4 @@
-ARG tag="Dev"
+ARG tag="dev"
 
 FROM crazyht/alpine-s6:$tag
 
