@@ -98,7 +98,7 @@ services:
         org.label-schema.vcs-url: "http://github.com/crazyht/"
         org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
 
-  consul-redis-sentinel:
+  alpine-consul-dotnet-runtime-deps:
     image: crazyht/alpine-consul-dotnet-runtime-deps:v${BUILD_VERSION:-Dev}
     build:
       context: ./alpine-consul-dotnet-runtime-deps/
@@ -114,7 +114,7 @@ services:
         org.label-schema.vcs-url: "http://github.com/crazyht/"
         org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
 
-  consul-redis-sentinel:
+  alpine-consul-dotnet-runtime:
     image: crazyht/alpine-consul-dotnet-runtime:v${BUILD_VERSION:-Dev}
     build:
       context: ./alpine-consul-dotnet-runtime/
