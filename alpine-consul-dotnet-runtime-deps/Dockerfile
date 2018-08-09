@@ -14,7 +14,8 @@ RUN apk add --no-cache \
         userspace-rcu \
         zlib \
     && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache \
-        lttng-ust
+        lttng-ust && \
+    rm -rf /var/cache/apk/*
 
 # Configure Kestrel web server to bind to port 80 when present
 ENV ASPNETCORE_URLS=http://+:80 \

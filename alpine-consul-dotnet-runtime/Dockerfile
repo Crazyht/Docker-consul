@@ -14,7 +14,8 @@ RUN apk add --no-cache --virtual .build-deps \
     && tar -C /usr/share/dotnet -xzf dotnet.tar.gz \
     && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet \
     && rm dotnet.tar.gz \
-    && apk del .build-deps
+    && apk del .build-deps && \
+    rm -rf /var/cache/apk/*
 
 ADD root/ /
 ENV SERVICE_PORT=0 \

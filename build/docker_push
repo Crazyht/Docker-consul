@@ -3,7 +3,7 @@ echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 
 push_full_description () {
-    local image="$1" 
+    local image="$1"
     local token="$2"
     local file="./$image/README.md"
     if [ -e "$file" ]
@@ -20,9 +20,9 @@ push_full_description () {
 }
 
 push_image () {
-    local image="$1" 
+    local image="$1"
     local token="$2"
-    local branch="$3" 
+    local branch="$3"
     local alpine="$4"
     docker push crazyht/${image}:v${VERSION:-Dev}
     if [ "$branch" == "master" ] && [ "$alpine" == "3.8" ]
@@ -60,3 +60,5 @@ push_image 'alpine-consul-ui' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
 push_image 'alpine-consul-template' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
 push_image 'alpine-consul-redis' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
 push_image 'alpine-consul-redis-sentinel' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
+push_image 'alpine-consul-dotnet-runtime-deps' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
+push_image 'alpine-consul-dotnet-runtime' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
