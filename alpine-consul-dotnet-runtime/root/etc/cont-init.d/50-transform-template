@@ -5,4 +5,3 @@ do
     echo "transform ${template_file} to $(dirname "$template_file")/$(basename "$template_file" .tpl).json"
     gomplate --file="${template_file}" --out="$(dirname "$template_file")/$(basename "$template_file" .tpl).json"
 done
-gomplate --file="/etc/redis.tpl" --out="/etc/redis.conf"

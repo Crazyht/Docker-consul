@@ -59,10 +59,10 @@ ADD root /
 # A volume for the redis files.
 VOLUME ["/data/redis"]
 
-ENV REDIS_PORT 6379
-ENV SENTINEL_PORT 26379
-ENV CONSUL_REDIS_SVCNAME Redis
-ENV CONSUL_SENTINEL_SVCNAME Redis-Sentinel
+ENV REDIS_PORT 6379 \
+    SENTINEL_PORT 26379 \
+    CONSUL_REDIS_SVCNAME Redis \
+    CONSUL_SENTINEL_SVCNAME Redis-Sentinel
 
 # Expose the ports for redis.
 EXPOSE 6379

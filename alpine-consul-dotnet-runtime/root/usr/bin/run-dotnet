@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv sh
+
+set -eux
+
+dotnet $DOTNET_ENTRYPOINT

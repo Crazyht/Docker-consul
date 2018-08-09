@@ -17,7 +17,7 @@ wait_consul_leader () {
     echo "==${leader}=="
   done
   echo "Consul leader : $leader"
-  set -e  
+  set -e
 }
 redis_info () {
   set +e
@@ -78,9 +78,9 @@ run () {
   # Domain name of the Service is also used as the password.
   # In this case, password is just an ID to distinguish this replica set from
   # other ones in the same Kubernetes cluster.
-#   { 
+#   {
 #     echo "masterauth $service_domain";
-#     echo "requirepass $service_domain"; 
+#     echo "requirepass $service_domain";
 #   } >> /opt/redis.conf
 
 

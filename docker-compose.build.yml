@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  alpine-s6: 
+  alpine-s6:
     image: crazyht/alpine-s6:v${BUILD_VERSION:-Dev}
     build:
       context: ./alpine-s6/
@@ -18,7 +18,7 @@ services:
         org.label-schema.vcs-url: "http://github.com/crazyht/"
         org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
 
-  consul: 
+  consul:
     image: crazyht/alpine-consul:v${BUILD_VERSION:-Dev}
     build:
       context: ./alpine-consul/
@@ -34,7 +34,7 @@ services:
         org.label-schema.vcs-url: "http://github.com/crazyht/"
         org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
 
-  consul-ui: 
+  consul-ui:
     image: crazyht/alpine-consul-ui:v${BUILD_VERSION:-Dev}
     build:
       context: ./alpine-consul-ui/
@@ -50,7 +50,7 @@ services:
         org.label-schema.vcs-url: "http://github.com/crazyht/"
         org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
 
-  consul-template: 
+  consul-template:
     image: crazyht/alpine-consul-template:v${BUILD_VERSION:-Dev}
     build:
       context: ./alpine-consul-template/
@@ -65,8 +65,8 @@ services:
         org.label-schema.version: "v${BUILD_VERSION:-Dev}"
         org.label-schema.vcs-url: "http://github.com/crazyht/"
         org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
-        
-  consul-redis: 
+
+  consul-redis:
     image: crazyht/alpine-consul-redis:v${BUILD_VERSION:-Dev}
     build:
       context: ./alpine-consul-redis/
@@ -82,7 +82,7 @@ services:
         org.label-schema.vcs-url: "http://github.com/crazyht/"
         org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
 
-  consul-redis-sentinel: 
+  consul-redis-sentinel:
     image: crazyht/alpine-consul-redis-sentinel:v${BUILD_VERSION:-Dev}
     build:
       context: ./alpine-consul-redis-sentinel/
@@ -92,6 +92,38 @@ services:
         org.label-schema.description: "Alpine with s6, Consul Agent and Redis sentinel"
         org.label-schema.vendor: "CrazyHT"
         org.label-schema.name: "alpine-consul-redis-sentinel"
+        org.label-schema.build-date: "${BUILD_DATE}"
+        org.label-schema.schema-version: "1.0"
+        org.label-schema.version: "v${BUILD_VERSION:-Dev}"
+        org.label-schema.vcs-url: "http://github.com/crazyht/"
+        org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
+
+  consul-redis-sentinel:
+    image: crazyht/alpine-consul-dotnet-runtime-deps:v${BUILD_VERSION:-Dev}
+    build:
+      context: ./alpine-consul-dotnet-runtime-deps/
+      args:
+        tag: "v${BUILD_VERSION:-Dev}"
+      labels:
+        org.label-schema.description: "Alpine with s6, Consul Agent and Dotnet runtime"
+        org.label-schema.vendor: "CrazyHT"
+        org.label-schema.name: "alpine-consul-dotnet-runtime-deps"
+        org.label-schema.build-date: "${BUILD_DATE}"
+        org.label-schema.schema-version: "1.0"
+        org.label-schema.version: "v${BUILD_VERSION:-Dev}"
+        org.label-schema.vcs-url: "http://github.com/crazyht/"
+        org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
+
+  consul-redis-sentinel:
+    image: crazyht/alpine-consul-dotnet-runtime:v${BUILD_VERSION:-Dev}
+    build:
+      context: ./alpine-consul-dotnet-runtime/
+      args:
+        tag: "v${BUILD_VERSION:-Dev}"
+      labels:
+        org.label-schema.description: "Alpine with s6, Consul Agent and Redis sentinel"
+        org.label-schema.vendor: "CrazyHT"
+        org.label-schema.name: "alpine-consul-dotnet-runtime"
         org.label-schema.build-date: "${BUILD_DATE}"
         org.label-schema.schema-version: "1.0"
         org.label-schema.version: "v${BUILD_VERSION:-Dev}"

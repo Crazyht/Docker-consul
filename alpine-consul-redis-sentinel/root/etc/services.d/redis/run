@@ -17,7 +17,7 @@ wait_consul_leader () {
     echo "==${leader}=="
   done
   echo "Consul leader : $leader"
-  set -e  
+  set -e
 }
 redis_info () {
   set +e
@@ -118,7 +118,7 @@ run () {
   < /etc/sentinel.template.conf sed "s/%MASTERIP%/$master_ip/g" | \
     sed "s/%SENTINEL_PORT%/$SENTINEL_PORT/g" | \
     sed "s/%REDIS_PORT%/$REDIS_PORT/g" | \
-    
+
     sed "s/%SENTINEL_FAILOVER_TIMEOUT%/$SENTINEL_FAILOVER_TIMEOUT/g" | \
     sed "s/%SENTINEL_DOWN_AFTER%/$SENTINEL_DOWN_AFTER/g" | \
     sed "s/%SENTINEL_QUORUM%/$SENTINEL_QUORUM/g" | \

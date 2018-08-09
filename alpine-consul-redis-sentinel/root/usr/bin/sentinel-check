@@ -8,14 +8,14 @@ if [ "$RESULT" != "PONG" ]; then
 fi
 
 echo 'Redis sentinel reply to PING'
-    
+
 sentinel_master=$(redis-cli -p $SENTINEL_PORT SENTINEL get-master-addr-by-name mymaster | head -n 1 | awk '{print $1}')
 dns_master=$(dig "_$CONSUL_REDIS_SVCNAME._master.service.$CONSUL_DC.$CONSUL_DOMAIN" A +short)
 
 if [ "$sentinel_master" != "$dns_master" ]; then
     echo "Redis on DNS differ of sentinel ( $dns_master != $sentinel_master )"
     exit 1
-else 
+else
     echo "Redis master for $CONSUL_REDIS_SVCNAME is $dns_master."
     exit 0
 fi

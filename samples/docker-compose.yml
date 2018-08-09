@@ -1,33 +1,51 @@
 version: '3.4'
 
 services:
-    consul:
-        image: crazyht/alpine-consul:latest
-    consului:
-        image: crazyht/alpine-consul-ui:latest
-        ports:
-            - 8500:8500
-    cache-eu:
-        image: crazyht/alpine-consul-redis:latest
-        environment:
-            - CONSUL_SENTINEL_SVCNAME=Sentinel-Europe
-            - CONSUL_REDIS_SVCNAME=Redis-Europe
-    sentinel-eu:
-        image: crazyht/alpine-consul-redis-sentinel:latest
-        environment:
-            - SENTINEL_FAILOVER_TIMEOUT=1000
-            - SENTINEL_DOWN_AFTER=1000
-            - CONSUL_SENTINEL_SVCNAME=Sentinel-Europe
-            - CONSUL_REDIS_SVCNAME=Redis-Europe
-    cache-as:
-        image: crazyht/alpine-consul-redis:latest
-        environment:
-            - CONSUL_SENTINEL_SVCNAME=Sentinel-Asia
-            - CONSUL_REDIS_SVCNAME=Redis-Asia
-    sentinel-as:
-        image: crazyht/alpine-consul-redis-sentinel:latest
-        environment:
-            - SENTINEL_FAILOVER_TIMEOUT=1000
-            - SENTINEL_DOWN_AFTER=1000
-            - CONSUL_SENTINEL_SVCNAME=Sentinel-Asia
-            - CONSUL_REDIS_SVCNAME=Redis-Asia
+  consul:
+    image: crazyht/alpine-consul:latest
+    environment:
+      - CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT=true
+  consului:
+    image: crazyht/alpine-consul-ui:latest
+    environment:
+      - CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT=true
+    ports:
+      - 8500:8500
+  cache-eu:
+    image: crazyht/alpine-consul-redis:latest
+    environment:
+      - CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT=true
+      - CONSUL_SENTINEL_SVCNAME=Sentinel-Europe
+      - CONSUL_REDIS_SVCNAME=Redis-Europe
+  sentinel-eu:
+    image: crazyht/alpine-consul-redis-sentinel:latest
+    environment:
+      - CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT=true
+      - SENTINEL_FAILOVER_TIMEOUT=1000
+      - SENTINEL_DOWN_AFTER=1000
+      - CONSUL_SENTINEL_SVCNAME=Sentinel-Europe
+      - CONSUL_REDIS_SVCNAME=Redis-Europe
+  cache-as:
+    image: crazyht/alpine-consul-redis:latest
+    environment:
+      - CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT=true
+      - CONSUL_SENTINEL_SVCNAME=Sentinel-Asia
+      - CONSUL_REDIS_SVCNAME=Redis-Asia
+  sentinel-as:
+    image: crazyht/alpine-consul-redis-sentinel:latest
+    environment:
+      - CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT=true
+      - SENTINEL_FAILOVER_TIMEOUT=1000
+      - SENTINEL_DOWN_AFTER=1000
+      - CONSUL_SENTINEL_SVCNAME=Sentinel-Asia
+      - CONSUL_REDIS_SVCNAME=Redis-Asia
+  dotnet:
+    image: redis-client-dotnet
+    build:
+      context: ./redis-client-dotnet
+      dockerfile: Dockerfile
+    command:  /usr/bin/run-dotnet
+    environment:
+      - CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT=true
+      - CONSUL_SVCNAME=My-Dotnet-App
+      - DOTNET_ENTRYPOINT=redis-client-dotnet.dll
