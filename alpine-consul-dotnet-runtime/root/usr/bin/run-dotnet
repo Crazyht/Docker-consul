@@ -1,7 +1,5 @@
 #!/usr/bin/with-contenv sh
 
-set -eux
-
 wait_consul_leader () {
   set +e
   local leader="$(curl -s http://127.0.0.1:8500/v1/status/leader)"
@@ -16,6 +14,22 @@ wait_consul_leader () {
   set -e
 }
 
-wait_consul_leader
+wait_check_dns () {
+  if [ ! -z "$CHECK_DNS" ]
+  then
+    for record in $CHECK_DNS
+    do
+        while [ -z "$(dig $record +short)" ]
+        do
+            echo "Waiting for DNS record : $record..."
+            sleep 2s
+        done
+    done
+  fi
+}
 
+wait_consul_leader
+wait_check_dns
+
+set -eu
 dotnet $DOTNET_ENTRYPOINT
