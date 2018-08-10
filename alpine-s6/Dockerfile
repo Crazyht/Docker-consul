@@ -1,4 +1,4 @@
-ARG alpineversion="3.8" 
+ARG alpineversion="3.8"
 ARG tag="dev"
 FROM alpine:$alpineversion
 
@@ -9,7 +9,7 @@ ENV S6_OVERLAY_VERSION=v1.21.4.0 \
 
 RUN apk update && \
     apk upgrade && \
-    apk add --update --no-cache bash bind-tools ca-certificates curl jq tar libcap gomplate jq && \
+    apk add --update --no-cache bind-tools ca-certificates curl jq tar libcap gomplate && \
     curl -sSL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-amd64.tar.gz \
     | tar xfz - -C / && \
     curl -sSL https://github.com/janeczku/go-dnsmasq/releases/download/${GO_DNSMASQ_VERSION}/go-dnsmasq-min_linux-amd64 -o /bin/go-dnsmasq && \

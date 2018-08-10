@@ -49,3 +49,9 @@ services:
       - CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT=true
       - CONSUL_SVCNAME=My-Dotnet-App
       - DOTNET_ENTRYPOINT=redis-client-dotnet.dll
+      - CHECK_DNS=Sentinel-Asia.service.dc1.consul
+  rabbit:
+    image: crazyht/alpine-consul-rabbitmq:dev
+    environment:
+      - CONSUL_BOOTSTRAP_DEBUG_TOSTDOUT=true
+      - CONSUL_SVCNAME=rabbitmq

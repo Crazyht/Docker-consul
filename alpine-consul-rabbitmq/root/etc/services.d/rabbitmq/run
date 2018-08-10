@@ -1,5 +1,8 @@
 #!/usr/bin/with-contenv sh
 
+export USER=rabbitmq
+export HOME=/var/lib/rabbitmq
+
 wait_consul_leader () {
   set +e
   local leader="$(curl -s http://127.0.0.1:8500/v1/status/leader)"
@@ -14,24 +17,7 @@ wait_consul_leader () {
   set -e
 }
 
-wait_check_dns () {
-  if [ ! -z "$CHECK_DNS" ]
-  then
-    for record in $CHECK_DNS
-    do
-        echo "Checking DNS record for $record"
-        while [ -z "$(dig $record +short)" ]
-        do
-            echo "Waiting for DNS record : $record..."
-            sleep 2s
-        done
-        dig $record +short
-    done
-  fi
-}
+# wait_consul_leader
 
-wait_consul_leader
-wait_check_dns
-
-set -eu
-dotnet $DOTNET_ENTRYPOINT
+#cd /usr/local/rabbitmq || exit 1
+exec s6-setuidgid rabbitmq rabbitmq-server
