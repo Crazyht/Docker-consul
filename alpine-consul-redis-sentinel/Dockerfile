@@ -5,9 +5,17 @@ FROM crazyht/alpine-consul-template:$tag
 # grab su-exec for easy step-down from root
 RUN addgroup -S redis && adduser -S -G redis redis && apk add --no-cache 'su-exec>=0.2'
 
-ENV REDIS_VERSION 4.0.11
-ENV REDIS_DOWNLOAD_URL http://download.redis.io/releases/redis-${REDIS_VERSION}.tar.gz
-ENV REDIS_DOWNLOAD_SHA fc53e73ae7586bcdacb4b63875d1ff04f68c5474c1ddeda78f00e5ae2eed1bbb
+ENV REDIS_VERSION=4.0.11
+ENV REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-${REDIS_VERSION}.tar.gz \
+    REDIS_DOWNLOAD_SHA=fc53e73ae7586bcdacb4b63875d1ff04f68c5474c1ddeda78f00e5ae2eed1bbb \
+    REDIS_PORT=6379 \
+    SENTINEL_PORT=26379 \
+    CONSUL_REDIS_SVCNAME=Redis \
+    CONSUL_SENTINEL_SVCNAME=Redis-Sentinel \
+    SENTINEL_FAILOVER_TIMEOUT=180000 \
+    SENTINEL_DOWN_AFTER=30000 \
+    SENTINEL_QUORUM=2 \
+    SENTINEL_PARALLEL_SYNC=1
 
 # for redis-sentinel see: http://redis.io/topics/sentinel
 RUN set -ex; \
@@ -55,13 +63,5 @@ ADD root /
 
 RUN chown redis:redis /etc/sentinel.conf && chmod 666 /etc/sentinel.conf
 
-ENV REDIS_PORT 6379
-ENV SENTINEL_PORT 26379
-ENV CONSUL_REDIS_SVCNAME Redis
-ENV CONSUL_SENTINEL_SVCNAME Redis-Sentinel
-ENV SENTINEL_FAILOVER_TIMEOUT 180000
-ENV SENTINEL_DOWN_AFTER 30000
-ENV SENTINEL_QUORUM 2
-ENV SENTINEL_PARALLEL_SYNC 1
 # Expose the ports for redis.
 EXPOSE 26379

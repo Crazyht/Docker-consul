@@ -13,7 +13,7 @@ RUN apk add --no-cache \
         tzdata \
         userspace-rcu \
         zlib \
-    && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache \
+    && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/testing add --no-cache \
         lttng-ust && \
     rm -rf /var/cache/apk/*
 

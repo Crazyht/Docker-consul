@@ -3,7 +3,10 @@ ARG tag="dev"
 FROM crazyht/alpine-consul-dotnet-runtime-deps:$tag
 
 # Install .NET Core
-ENV DOTNET_VERSION 2.1.2
+ENV DOTNET_VERSION=2.1.2 \
+    SERVICE_PORT=0 \
+    CONSUL_SVCNAME=dotnet \
+    DOTNET_ENTRYPOINT=mydll.dll
 
 RUN apk add --no-cache --virtual .build-deps \
         openssl \
@@ -18,9 +21,6 @@ RUN apk add --no-cache --virtual .build-deps \
     rm -rf /var/cache/apk/*
 
 ADD root/ /
-ENV SERVICE_PORT=0 \
-    CONSUL_SVCNAME=dotnet \
-    DOTNET_ENTRYPOINT=mydll.dll
 
 
 CMD [ "/usr/bin/run-dotnet" ]

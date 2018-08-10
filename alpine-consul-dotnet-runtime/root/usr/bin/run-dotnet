@@ -2,4 +2,20 @@
 
 set -eux
 
+wait_consul_leader () {
+  set +e
+  local leader="$(curl -s http://127.0.0.1:8500/v1/status/leader)"
+  echo "==${leader}=="
+  while [ ! -n "$leader" ] || [ "$leader" == "No known Consul servers" ] || [ "$leader" == "\"\"" ]
+  do
+    sleep 1s
+    leader="$(curl -s http://127.0.0.1:8500/v1/status/leader)"
+    echo "==${leader}=="
+  done
+  echo "Consul leader : $leader"
+  set -e
+}
+
+wait_consul_leader
+
 dotnet $DOTNET_ENTRYPOINT

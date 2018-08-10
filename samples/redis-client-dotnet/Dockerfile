@@ -8,6 +8,8 @@ RUN dotnet restore
 # copy and build everything else
 COPY . ./
 RUN dotnet publish -c Release -o out
+# -r linux-musl-x64
+# -r alpine.3.7-x64
 ENTRYPOINT ["dotnet", "out/redis-client-dotnet.dll"]
 
 FROM crazyht/alpine-consul-dotnet-runtime:dev

@@ -5,9 +5,13 @@ FROM crazyht/alpine-consul-template:$tag
 # grab su-exec for easy step-down from root
 RUN addgroup -S redis && adduser -S -G redis redis && apk add --no-cache 'su-exec>=0.2'
 
-ENV REDIS_VERSION 4.0.11
-ENV REDIS_DOWNLOAD_URL http://download.redis.io/releases/redis-${REDIS_VERSION}.tar.gz
-ENV REDIS_DOWNLOAD_SHA fc53e73ae7586bcdacb4b63875d1ff04f68c5474c1ddeda78f00e5ae2eed1bbb
+ENV REDIS_VERSION=4.0.11
+ENV REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-${REDIS_VERSION}.tar.gz \
+    REDIS_DOWNLOAD_SHA=fc53e73ae7586bcdacb4b63875d1ff04f68c5474c1ddeda78f00e5ae2eed1bbb \
+    REDIS_PORT=6379 \
+    SENTINEL_PORT=26379 \
+    CONSUL_REDIS_SVCNAME=Redis \
+    CONSUL_SENTINEL_SVCNAME=Redis-Sentinel
 
 # for redis-sentinel see: http://redis.io/topics/sentinel
 RUN set -ex; \
@@ -58,11 +62,6 @@ ADD root /
 
 # A volume for the redis files.
 VOLUME ["/data/redis"]
-
-ENV REDIS_PORT 6379 \
-    SENTINEL_PORT 26379 \
-    CONSUL_REDIS_SVCNAME Redis \
-    CONSUL_SENTINEL_SVCNAME Redis-Sentinel
 
 # Expose the ports for redis.
 EXPOSE 6379
