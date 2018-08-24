@@ -11,8 +11,8 @@
         "args": ["redis-check"],
         "id": "redis",
         "name": "redis",
-        "interval": "2s",
-        "timeout": "1s"
+        "interval": "5s",
+        "timeout": "3s"
       }
     ]
   }
