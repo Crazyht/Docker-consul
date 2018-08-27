@@ -10,7 +10,7 @@ wait_consul_leader () {
     leader="$(curl -s http://127.0.0.1:8500/v1/status/leader)"
     echo "==${leader}=="
   done
-  echo "Consul leader : $leader"
+  echo "Consul leader : ${leader}"
   set -e
 }
 
@@ -19,13 +19,13 @@ wait_check_dns () {
   then
     for record in $CHECK_DNS
     do
-        echo "Checking DNS record for $record"
-        while [ -z "$(dig $record +short)" ]
+        echo "Checking DNS record for ${record}"
+        while [ -z "$(dig ${record} +short)" ]
         do
-            echo "Waiting for DNS record : $record..."
+            echo "Waiting for DNS record : ${record}..."
             sleep 2s
         done
-        dig $record +short
+        dig ${record} +short
     done
   fi
 }
@@ -33,5 +33,5 @@ wait_check_dns () {
 wait_consul_leader
 wait_check_dns
 
-set -eu
-dotnet $DOTNET_ENTRYPOINT
+set -e
+dotnet ${DOTNET_ENTRYPOINT} ${DOTNET_ARGS}
