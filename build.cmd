@@ -6,4 +6,4 @@ docker build -t crazyht/alpine-consul-redis:dev ./alpine-consul-redis/
 docker build -t crazyht/alpine-consul-redis-sentinel:dev ./alpine-consul-redis-sentinel/
 docker build -t crazyht/alpine-consul-dotnet-runtime-deps:dev ./alpine-consul-dotnet-runtime-deps/
 docker build -t crazyht/alpine-consul-dotnet-runtime:dev ./alpine-consul-dotnet-runtime/
-docker build -t crazyht/alpine-consul-rabbitmq:dev ./alpine-consul-rabbitmq/
+REM docker build -t crazyht/alpine-consul-rabbitmq:dev ./alpine-consul-rabbitmq/

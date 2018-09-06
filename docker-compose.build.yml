@@ -130,18 +130,18 @@ services:
         org.label-schema.vcs-url: "http://github.com/crazyht/"
         org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
 
-  alpine-consul-rabbitmq:
-    image: crazyht/alpine-consul-rabbitmq:v${BUILD_VERSION:-Dev}
-    build:
-      context: ./alpine-consul-rabbitmq/
-      args:
-        tag: "v${BUILD_VERSION:-Dev}"
-      labels:
-        org.label-schema.description: "Alpine with s6, Consul Agent and RabbitMq"
-        org.label-schema.vendor: "CrazyHT"
-        org.label-schema.name: "alpine-consul-rabbitmq"
-        org.label-schema.build-date: "${BUILD_DATE}"
-        org.label-schema.schema-version: "1.0"
-        org.label-schema.version: "v${BUILD_VERSION:-Dev}"
-        org.label-schema.vcs-url: "http://github.com/crazyht/"
-        org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"
+#   alpine-consul-rabbitmq:
+#     image: crazyht/alpine-consul-rabbitmq:v${BUILD_VERSION:-Dev}
+#     build:
+#       context: ./alpine-consul-rabbitmq/
+#       args:
+#         tag: "v${BUILD_VERSION:-Dev}"
+#       labels:
+#         org.label-schema.description: "Alpine with s6, Consul Agent and RabbitMq"
+#         org.label-schema.vendor: "CrazyHT"
+#         org.label-schema.name: "alpine-consul-rabbitmq"
+#         org.label-schema.build-date: "${BUILD_DATE}"
+#         org.label-schema.schema-version: "1.0"
+#         org.label-schema.version: "v${BUILD_VERSION:-Dev}"
+#         org.label-schema.vcs-url: "http://github.com/crazyht/"
+#         org.label-schema.vcs-ref: "${TRAVIS_COMMIT:-NoGit}"

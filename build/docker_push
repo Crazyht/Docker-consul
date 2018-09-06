@@ -62,5 +62,5 @@ push_image 'alpine-consul-redis' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
 push_image 'alpine-consul-redis-sentinel' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
 push_image 'alpine-consul-dotnet-runtime-deps' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
 push_image 'alpine-consul-dotnet-runtime' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
-push_image 'alpine-consul-rabbitmq' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
+# push_image 'alpine-consul-rabbitmq' "$TOKEN" "$TRAVIS_BRANCH" "$ALPINE_VERSION"
 
